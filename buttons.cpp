@@ -1,12 +1,15 @@
 #include "buttons.h"
 
+_RESPONSE_H response;
+
 _BUTTONS_H::_BUTTONS_H()
 {
     
 }
 
-void _BUTTONS_H::openPins(){
+void _BUTTONS_H::init(){
     Serial.begin(115200);
+    LCD.initLCD();
 
     pinMode(X_POSITIVE, INPUT);
     pinMode(X_NEGATIVE, INPUT);
@@ -39,16 +42,7 @@ void _BUTTONS_H::onPressed(){
     int STOP_Button = digitalRead(STOP_B);
     int RESET_Button = digitalRead(RESET_B);
 
-
-    if (m_P_Button == 1)
-    {
-        millimetre += 1;
-    } else if (m_N_Button == 1)
-    {
-        if (millimetre != 0){
-            millimetre -= 1;
-        }
-    } else if (START_Button == 1)
+    if (START_Button == 1)
     {
         Serial.println();
     } else if (STOP_Button == 1)
@@ -60,18 +54,28 @@ void _BUTTONS_H::onPressed(){
     } else if ( SPB_Button == 1)
     {
 
+    }else if (m_P_Button == 1)
+    {
+        millimetre += 1;
+    } else if (m_N_Button == 1)
+    {
+        if (millimetre != 0){
+            millimetre -= 1;
+        }
+
     } else if (x_P_Button == 1)
     {
-        Serial.println("G0 X2");
+        sendPinsData("X2");
+
     } else if (x_N_Button == 1)
     {
-        Serial.println("G0 X-2");
+        sendPinsData("X-2");
     } else if (y_P_Button == 1)
     {
-        Serial.println("G0 Y2");
+        sendPinsData("Y2");
     } else if (y_N_Button == 1)
     {
-        Serial.println("G0 Y-2");
+        sendPinsData("Y-2");
     } else if (z_P_Button == 1)
     {
         Serial.println("G0 Z2");
@@ -85,14 +89,17 @@ void _BUTTONS_H::onPressed(){
 
 }
 
-void _BUTTONS_H::sendData(String command){
+void _BUTTONS_H::sendPinsData(String command){
     String data = "G0 ";
     data = data + command;
 
     Serial.println("G91");
-    Serial.println(data);
-    Serial.println("G90");
+    if (response.parseResponseOk() == "ok")
+    {
+        Serial.println(data);
 
+    }
+    Serial.println("G90");
 
 }
 

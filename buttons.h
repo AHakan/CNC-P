@@ -2,6 +2,8 @@
 #define _BUTTONS_H_
 
 #include <Arduino.h>
+#include "response.h"
+#include "lcd.h"
 
 // Buttons define
 #define X_POSITIVE 2
@@ -21,9 +23,9 @@ class _BUTTONS_H
 {
     public:
         _BUTTONS_H();
-        void openPins();
+        void init();
         void onPressed();
-        void sendData(String command);
+        void sendPinsData(String command);
 
         uint8_t millimetre = 0;
     private:

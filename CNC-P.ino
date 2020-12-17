@@ -10,7 +10,7 @@
 #include "buttons.h"
 
 void setup() {
-    BUTTONS.openPins();
+    BUTTONS.init();
 }
 
 void loop() {
