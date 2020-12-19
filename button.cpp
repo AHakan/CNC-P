@@ -1,16 +1,14 @@
-#include "buttons.h"
+#include "button.h"
 
 _RESPONSE_H response;
 
-_BUTTONS_H::_BUTTONS_H()
+_BUTTON_H::_BUTTON_H()
 {
     
 }
 
-void _BUTTONS_H::init(){
-    Serial.begin(115200);
-    LCD.initLCD();
-
+void _BUTTON_H::init()
+{
     pinMode(X_POSITIVE, INPUT);
     pinMode(X_NEGATIVE, INPUT);
     pinMode(Y_POSITIVE, INPUT);
@@ -18,8 +16,8 @@ void _BUTTONS_H::init(){
     pinMode(Z_POSITIVE, INPUT);
     pinMode(Z_NEGATIVE, INPUT);
     pinMode(SPB_BUTTON, INPUT);
-    pinMode(MILLIMETRE_P, INPUT);
-    pinMode(MILLIMETRE_N, INPUT);
+    pinMode(MILLIMETER_P, INPUT);
+    pinMode(MILLIMETER_N, INPUT);
     pinMode(START_B, INPUT);
     pinMode(STOP_B, INPUT);
     pinMode(RESET_B, INPUT);
@@ -28,7 +26,8 @@ void _BUTTONS_H::init(){
     Serial.println("$X");
 }
 
-void _BUTTONS_H::onPressed(){
+void _BUTTON_H::onPressed()
+{
     int x_P_Button = digitalRead(X_POSITIVE);
     int x_N_Button = digitalRead(X_NEGATIVE);
     int y_P_Button = digitalRead(Y_POSITIVE);
@@ -36,8 +35,8 @@ void _BUTTONS_H::onPressed(){
     int z_P_Button = digitalRead(Z_POSITIVE);
     int z_N_Button = digitalRead(Z_NEGATIVE);
     int SPB_Button = digitalRead(SPB_BUTTON);
-    int m_P_Button = digitalRead(MILLIMETRE_P);
-    int m_N_Button = digitalRead(MILLIMETRE_N);
+    int m_P_Button = digitalRead(MILLIMETER_P);
+    int m_N_Button = digitalRead(MILLIMETER_N);
     int START_Button = digitalRead(START_B);
     int STOP_Button = digitalRead(STOP_B);
     int RESET_Button = digitalRead(RESET_B);
@@ -56,32 +55,54 @@ void _BUTTONS_H::onPressed(){
 
     }else if (m_P_Button == 1)
     {
-        millimetre += 1;
-    } else if (m_N_Button == 1)
-    {
-        if (millimetre != 0){
-            millimetre -= 1;
+        if (millimeter>=1)
+        {
+            millimeter += 1;
+        } else {
+            millimeter += 0.1;
         }
+        Serial.println(millimeter);
 
+        LCD.writeMillimeter(millimeter);
+
+    } else if (m_N_Button == 1)
+    {   
+        if (millimeter>1.0){
+            millimeter -= 1.0;
+        } else {
+            if (millimeter!=0.0)
+            {
+                millimeter -= 0.1;
+            }
+        }
+        Serial.println(millimeter);
+
+        LCD.writeMillimeter(millimeter);
     } else if (x_P_Button == 1)
     {
-        sendPinsData("X2");
+        data = "X"+String(millimeter);
+        sendPinsData(data);
 
     } else if (x_N_Button == 1)
     {
-        sendPinsData("X-2");
+        data = "X-"+String(millimeter);
+        sendPinsData(data);
     } else if (y_P_Button == 1)
     {
-        sendPinsData("Y2");
+        data = "Y"+String(millimeter);
+        sendPinsData(data);
     } else if (y_N_Button == 1)
     {
-        sendPinsData("Y-2");
+        data = "Y-"+String(millimeter);
+        sendPinsData(data);
     } else if (z_P_Button == 1)
     {
-        Serial.println("G0 Z2");
+        data = "Z"+String(millimeter);
+        sendPinsData(data);
     } else if (z_N_Button == 1)
     {
-        Serial.println("G0 Z-2");
+        data = "Z-"+String(millimeter);
+        sendPinsData(data);
     } else
     {
 
@@ -89,7 +110,8 @@ void _BUTTONS_H::onPressed(){
 
 }
 
-void _BUTTONS_H::sendPinsData(String command){
+void _BUTTON_H::sendPinsData(String command)
+{
     String data = "G0 ";
     data = data + command;
 
@@ -97,10 +119,13 @@ void _BUTTONS_H::sendPinsData(String command){
     if (response.parseResponseOk() == "ok")
     {
         Serial.println(data);
-
+        if (response.parseResponseOk() == "ok")
+        {
+            Serial.println("G90");
+        }
     }
-    Serial.println("G90");
 
 }
 
-_BUTTONS_H BUTTONS = _BUTTONS_H();
+
+_BUTTON_H BUTTON = _BUTTON_H();

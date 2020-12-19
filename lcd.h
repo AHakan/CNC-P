@@ -9,8 +9,9 @@ class _LCD_H
 {
     public:
         _LCD_H();
-        void initLCD();
+        void init();
         void writeResponse(char res[]);
+        void writeMillimeter(float data);
 
     private:
 };

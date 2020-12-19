@@ -7,13 +7,12 @@
 # Devrenin pcbsini tasarlama ve ürettirme
 */
 
-#include "buttons.h"
+#include "cncp.h"
 
 void setup() {
-    BUTTONS.init();
+    CNCP.init();
 }
 
 void loop() {
-    BUTTONS.onPressed();
-    delay(100);
+    CNCP.loop();
 }

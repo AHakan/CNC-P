@@ -7,12 +7,14 @@ _RESPONSE_H::_RESPONSE_H()
 
 }
 
-void _RESPONSE_H::getResponse(){
+void _RESPONSE_H::getResponse()
+{
     Serial.readBytes(serialRead, 6);
     ms.Target(serialRead);
 }
 
-String _RESPONSE_H::parseResponseOk(){
+String _RESPONSE_H::parseResponseOk()
+{
     getResponse();
     char result = ms.Match("ok");
     if (result == "ok")

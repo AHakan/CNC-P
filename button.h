@@ -1,5 +1,5 @@
-#ifndef _BUTTONS_H_
-#define _BUTTONS_H_
+#ifndef _BUTTON_H_
+#define _BUTTON_H_
 
 #include <Arduino.h>
 #include "response.h"
@@ -13,24 +13,25 @@
 #define Z_POSITIVE 6
 #define Z_NEGATIVE 7
 #define SPB_BUTTON 8
-#define MILLIMETRE_P 9
-#define MILLIMETRE_N 10
+#define MILLIMETER_P 9
+#define MILLIMETER_N 10
 #define START_B 11
 #define STOP_B 12
 #define RESET_B 13
 
-class _BUTTONS_H
+class _BUTTON_H
 {
     public:
-        _BUTTONS_H();
+        _BUTTON_H();
         void init();
         void onPressed();
         void sendPinsData(String command);
 
-        uint8_t millimetre = 0;
+        float millimeter = 0;
+        String data;
     private:
 
 };
 
-extern _BUTTONS_H BUTTONS;
+extern _BUTTON_H BUTTON;
 #endif
